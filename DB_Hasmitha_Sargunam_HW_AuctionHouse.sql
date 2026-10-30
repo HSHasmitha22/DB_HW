@@ -143,8 +143,6 @@ CREATE TABLE payment (
     method     varchar(15)   NOT NULL CHECK (method IN ('CARD','BANK_TRANSFER','CASH')),
     paid_at    timestamptz   NOT NULL DEFAULT now()
 );
-
--- Helpful indexes for foreign keys that are searched often
 CREATE INDEX ix_bid_lot_amount      ON bid (lot_id, amount DESC);
 CREATE INDEX ix_bid_bidder          ON bid (bidder_id);
 CREATE INDEX ix_item_category       ON item (category_id);
