@@ -5,7 +5,6 @@ CREATE TABLE city (
     name VARCHAR(80) NOT NULL UNIQUE,
     PRIMARY KEY (city_id)
 );
-
 CREATE TABLE district (
     district_id INTEGER GENERATED ALWAYS AS IDENTITY,
     city_id INT NOT NULL,
@@ -16,7 +15,6 @@ CREATE TABLE district (
     CHECK (delivery_fee >= 0),
     UNIQUE (city_id, name)
 );
-
 CREATE TABLE street (
     street_id INTEGER GENERATED ALWAYS AS IDENTITY,
     district_id INT NOT NULL,
@@ -25,7 +23,6 @@ CREATE TABLE street (
     FOREIGN KEY (district_id) REFERENCES district(district_id),
     UNIQUE (district_id, name)
 );
-
 CREATE TABLE customer (
     customer_id INTEGER GENERATED ALWAYS AS IDENTITY,
     first_name VARCHAR(50) NOT NULL,
@@ -35,7 +32,6 @@ CREATE TABLE customer (
     created_at TIMESTAMP NOT NULL,
     PRIMARY KEY (customer_id)
 );
-
 CREATE TABLE address (
     address_id INTEGER GENERATED ALWAYS AS IDENTITY,
     customer_id INT NOT NULL,
@@ -49,13 +45,11 @@ CREATE TABLE address (
     FOREIGN KEY (customer_id) REFERENCES customer(customer_id),
     FOREIGN KEY (street_id) REFERENCES street(street_id)
 );
-
 CREATE TABLE menu_category (
     category_id INTEGER GENERATED ALWAYS AS IDENTITY,
     name VARCHAR(50) NOT NULL UNIQUE,
     PRIMARY KEY (category_id)
 );
-
 CREATE TABLE product (
     product_id INTEGER GENERATED ALWAYS AS IDENTITY,
     category_id INT NOT NULL,
@@ -69,14 +63,12 @@ CREATE TABLE product (
     CHECK (price > 0),
     CHECK (weight_g > 0)
 );
-
 CREATE TABLE ingredient (
     ingredient_id INTEGER GENERATED ALWAYS AS IDENTITY,
     name VARCHAR(80) NOT NULL UNIQUE,
     unit VARCHAR(10) NOT NULL,
     PRIMARY KEY (ingredient_id)
 );
-
 CREATE TABLE product_ingredient (
     product_id INT,
     ingredient_id INT,
@@ -86,13 +78,11 @@ CREATE TABLE product_ingredient (
     FOREIGN KEY (ingredient_id) REFERENCES ingredient(ingredient_id),
     CHECK (quantity > 0)
 );
-
 CREATE TABLE allergen (
     allergen_id INTEGER GENERATED ALWAYS AS IDENTITY,
     name VARCHAR(50) NOT NULL UNIQUE,
     PRIMARY KEY (allergen_id)
 );
-
 CREATE TABLE product_allergen (
     product_id INT,
     allergen_id INT,
@@ -100,19 +90,16 @@ CREATE TABLE product_allergen (
     FOREIGN KEY (product_id) REFERENCES product(product_id),
     FOREIGN KEY (allergen_id) REFERENCES allergen(allergen_id)
 );
-
 CREATE TABLE order_status (
     status_id INTEGER GENERATED ALWAYS AS IDENTITY,
     name VARCHAR(30) NOT NULL UNIQUE,
     PRIMARY KEY (status_id)
 );
-
 CREATE TABLE payment_method (
     method_id INTEGER GENERATED ALWAYS AS IDENTITY,
     name VARCHAR(30) NOT NULL UNIQUE,
     PRIMARY KEY (method_id)
 );
-
 CREATE TABLE promo_code (
     promo_id INTEGER GENERATED ALWAYS AS IDENTITY,
     code VARCHAR(20) NOT NULL UNIQUE,
@@ -122,7 +109,6 @@ CREATE TABLE promo_code (
     PRIMARY KEY (promo_id),
     CHECK (discount_percent BETWEEN 0 AND 100)
 );
-
 CREATE TABLE orders (
     order_id INTEGER GENERATED ALWAYS AS IDENTITY,
     customer_id INT NOT NULL,
@@ -139,7 +125,6 @@ CREATE TABLE orders (
     FOREIGN KEY (status_id) REFERENCES order_status(status_id),
     FOREIGN KEY (promo_id) REFERENCES promo_code(promo_id)
 );
-
 CREATE TABLE order_item (
     order_id INT,
     product_id INT,
@@ -151,7 +136,6 @@ CREATE TABLE order_item (
     CHECK (quantity > 0),
     CHECK (unit_price > 0)
 );
-
 CREATE TABLE order_status_history (
     history_id INTEGER GENERATED ALWAYS AS IDENTITY,
     order_id INT NOT NULL,
@@ -161,7 +145,6 @@ CREATE TABLE order_status_history (
     FOREIGN KEY (order_id) REFERENCES orders(order_id),
     FOREIGN KEY (status_id) REFERENCES order_status(status_id)
 );
-
 CREATE TABLE payment (
     payment_id INTEGER GENERATED ALWAYS AS IDENTITY,
     order_id INT NOT NULL UNIQUE,
@@ -179,7 +162,6 @@ CREATE TABLE vehicle_type (
     name VARCHAR(30) NOT NULL UNIQUE,
     PRIMARY KEY (vehicle_type_id)
 );
-
 CREATE TABLE courier (
     courier_id INTEGER GENERATED ALWAYS AS IDENTITY,
     vehicle_type_id INT NOT NULL,
@@ -191,7 +173,6 @@ CREATE TABLE courier (
     PRIMARY KEY (courier_id),
     FOREIGN KEY (vehicle_type_id) REFERENCES vehicle_type(vehicle_type_id)
 );
-
 CREATE TABLE courier_shift (
     shift_id INTEGER GENERATED ALWAYS AS IDENTITY,
     courier_id INT NOT NULL,
@@ -201,7 +182,6 @@ CREATE TABLE courier_shift (
     FOREIGN KEY (courier_id) REFERENCES courier(courier_id),
     CHECK (shift_end > shift_start)
 );
-
 CREATE TABLE delivery (
     delivery_id INTEGER GENERATED ALWAYS AS IDENTITY,
     order_id INT NOT NULL UNIQUE,
@@ -213,7 +193,6 @@ CREATE TABLE delivery (
     FOREIGN KEY (order_id) REFERENCES orders(order_id),
     FOREIGN KEY (courier_id) REFERENCES courier(courier_id)
 );
-
 CREATE TABLE review (
     review_id INTEGER GENERATED ALWAYS AS IDENTITY,
     order_id INT NOT NULL UNIQUE,
