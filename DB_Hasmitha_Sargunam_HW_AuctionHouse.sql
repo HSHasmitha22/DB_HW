@@ -5,7 +5,7 @@ CREATE TABLE participant (
     participant_id integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     first_name     varchar(60)  NOT NULL,
     last_name      varchar(60)  NOT NULL,
-    email          varchar(90) NOT NULL UNIQUE,
+    email          varchar(100) NOT NULL UNIQUE,
     phone          varchar(25),
     registered_at  timestamptz  NOT NULL DEFAULT now()
 );
