@@ -2,9 +2,6 @@
 
 SQL SELECT HW - dvdrental database (PostgreSQL)
 Author: Hasmitha Sargunam
-Every task is solved three ways: JOIN, SUBQUERY and CTE. No window functions are used.
-Schema name (public) is written before every table. No IDs are hardcoded (lookups go by name).
-Tested on PostgreSQL 16 against the provided dvdrental database. All queries run without errors.
 
 
 JOIN TYPE NOTES used throughout:
