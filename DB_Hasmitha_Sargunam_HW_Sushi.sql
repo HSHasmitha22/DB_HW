@@ -76,7 +76,7 @@ CREATE TABLE product_ingredient (
     PRIMARY KEY (product_id, ingredient_id),
     FOREIGN KEY (product_id) REFERENCES product(product_id),
     FOREIGN KEY (ingredient_id) REFERENCES ingredient(ingredient_id),
-   
+    CHECK (quantity > 0) 
 );
 CREATE TABLE allergen (
     allergen_id INTEGER GENERATED ALWAYS AS IDENTITY,
