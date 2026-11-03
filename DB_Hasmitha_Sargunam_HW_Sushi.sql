@@ -2,13 +2,13 @@
 
 CREATE TABLE city (
     city_id INTEGER GENERATED ALWAYS AS IDENTITY,
-    name VARCHAR(80) NOT NULL UNIQUE,
+    name VARCHAR(100) NOT NULL UNIQUE,
     PRIMARY KEY (city_id)
 );
 CREATE TABLE district (
     district_id INTEGER GENERATED ALWAYS AS IDENTITY,
     city_id INT NOT NULL,
-    name VARCHAR(80) NOT NULL,
+    name VARCHAR(100) NOT NULL,
     delivery_fee DECIMAL(6,2) NOT NULL,
     PRIMARY KEY (district_id),
     FOREIGN KEY (city_id) REFERENCES city(city_id),
