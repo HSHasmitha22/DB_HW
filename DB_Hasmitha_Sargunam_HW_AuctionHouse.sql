@@ -86,7 +86,7 @@ CREATE TABLE lot (
     lot_id        integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     auction_id    integer       NOT NULL REFERENCES auction(auction_id),
     item_id       integer       NOT NULL REFERENCES item(item_id),
-    lot_number    smallint      NOT NULL CHECK (lot_number > 0),
+    lot_number    int      NOT NULL CHECK (lot_number > 0),
     start_price   numeric(12,2) NOT NULL CHECK (start_price >= 0),
     reserve_price numeric(12,2),
     bid_increment numeric(12,2) NOT NULL DEFAULT 10 CHECK (bid_increment > 0),
@@ -110,7 +110,7 @@ CREATE TABLE bid (
     CONSTRAINT uq_bid_with_lot       UNIQUE (bid_id, lot_id)
 );
 CREATE TABLE fee_schedule (
-    fee_schedule_id       smallint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    fee_schedule_id       int GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     buyer_premium_pct     numeric(5,2) NOT NULL CHECK (buyer_premium_pct BETWEEN 0 AND 100),
     seller_commission_pct numeric(5,2) NOT NULL CHECK (seller_commission_pct BETWEEN 0 AND 100),
     valid_from            date NOT NULL,
@@ -121,7 +121,7 @@ CREATE TABLE sale (
     sale_id         integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     lot_id          integer     NOT NULL UNIQUE REFERENCES lot(lot_id),
     winning_bid_id  bigint      NOT NULL UNIQUE,
-    fee_schedule_id smallint    NOT NULL REFERENCES fee_schedule(fee_schedule_id),
+    fee_schedule_id int    NOT NULL REFERENCES fee_schedule(fee_schedule_id),
     sold_at         timestamptz NOT NULL DEFAULT now(),
     CONSTRAINT fk_sale_winning_bid_same_lot
         FOREIGN KEY (winning_bid_id, lot_id) REFERENCES bid(bid_id, lot_id)
