@@ -9,12 +9,10 @@ CREATE TABLE participant (
     phone          varchar(25),
     registered_at  timestamptz  NOT NULL DEFAULT now()
 );
-
 CREATE TABLE role (
     role_id   smallint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     role_name varchar(30) NOT NULL UNIQUE
 );
-
 CREATE TABLE participant_role (
     participant_id integer  NOT NULL REFERENCES participant(participant_id),
     role_id        smallint NOT NULL REFERENCES role(role_id),
@@ -47,7 +45,6 @@ CREATE TABLE category (
     CONSTRAINT ck_category_not_own_parent CHECK (parent_category_id IS NULL OR parent_category_id <> category_id),
     CONSTRAINT uq_category_name_per_parent UNIQUE NULLS NOT DISTINCT (parent_category_id, category_name)
 );
-
 CREATE TABLE item (
     item_id       integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     category_id   integer      NOT NULL REFERENCES category(category_id),
@@ -56,7 +53,6 @@ CREATE TABLE item (
     creation_year smallint CHECK (creation_year BETWEEN 0 AND 2100),
     registered_at timestamptz  NOT NULL DEFAULT now()
 );
-
 CREATE TABLE item_ownership (
     item_ownership_id integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     item_id    integer NOT NULL REFERENCES item(item_id),
@@ -76,7 +72,6 @@ CREATE TABLE item_appraisal (
     appraised_at  timestamptz   NOT NULL DEFAULT now(),
     CONSTRAINT ck_item_appraisal_range CHECK (estimate_high >= estimate_low)
 );
-
 CREATE TABLE auction (
     auction_id    integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     auctioneer_id integer      NOT NULL REFERENCES participant(participant_id),
@@ -99,14 +94,12 @@ CREATE TABLE lot (
     CONSTRAINT uq_lot_number_per_auction UNIQUE (auction_id, lot_number),
     CONSTRAINT uq_item_once_per_auction  UNIQUE (auction_id, item_id)
 );
-
 CREATE TABLE lot_status_history (
     lot_id     integer     NOT NULL REFERENCES lot(lot_id),
     changed_at timestamptz NOT NULL DEFAULT now(),
     status     varchar(12) NOT NULL CHECK (status IN ('SCHEDULED','OPEN','SOLD','UNSOLD','WITHDRAWN')),
     PRIMARY KEY (lot_id, changed_at)
 );
-
 CREATE TABLE bid (
     bid_id    bigint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     lot_id    integer       NOT NULL REFERENCES lot(lot_id),
@@ -116,7 +109,6 @@ CREATE TABLE bid (
     CONSTRAINT uq_bid_amount_per_lot UNIQUE (lot_id, amount),
     CONSTRAINT uq_bid_with_lot       UNIQUE (bid_id, lot_id)
 );
-
 CREATE TABLE fee_schedule (
     fee_schedule_id       smallint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     buyer_premium_pct     numeric(5,2) NOT NULL CHECK (buyer_premium_pct BETWEEN 0 AND 100),
@@ -125,7 +117,6 @@ CREATE TABLE fee_schedule (
     valid_to              date,
     CONSTRAINT ck_fee_schedule_period CHECK (valid_to IS NULL OR valid_to > valid_from)
 );
-
 CREATE TABLE sale (
     sale_id         integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     lot_id          integer     NOT NULL UNIQUE REFERENCES lot(lot_id),
@@ -135,7 +126,6 @@ CREATE TABLE sale (
     CONSTRAINT fk_sale_winning_bid_same_lot
         FOREIGN KEY (winning_bid_id, lot_id) REFERENCES bid(bid_id, lot_id)
 );
-
 CREATE TABLE payment (
     payment_id integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     sale_id    integer       NOT NULL REFERENCES sale(sale_id),
