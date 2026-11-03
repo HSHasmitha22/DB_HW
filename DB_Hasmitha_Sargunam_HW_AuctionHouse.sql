@@ -5,17 +5,17 @@ CREATE TABLE participant (
     participant_id integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     first_name     varchar(60)  NOT NULL,
     last_name      varchar(60)  NOT NULL,
-    email          varchar(120) NOT NULL UNIQUE,
+    email          varchar(90) NOT NULL UNIQUE,
     phone          varchar(25),
     registered_at  timestamptz  NOT NULL DEFAULT now()
 );
 CREATE TABLE role (
-    role_id   smallint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    role_id   int GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     role_name varchar(30) NOT NULL UNIQUE
 );
 CREATE TABLE participant_role (
     participant_id integer  NOT NULL REFERENCES participant(participant_id),
-    role_id        smallint NOT NULL REFERENCES role(role_id),
+    role_id        int NOT NULL REFERENCES role(role_id),
     valid_from     date     NOT NULL DEFAULT CURRENT_DATE,
     valid_to       date,
     PRIMARY KEY (participant_id, role_id, valid_from),
