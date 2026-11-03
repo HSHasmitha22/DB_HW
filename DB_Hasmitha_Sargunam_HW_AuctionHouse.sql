@@ -29,7 +29,7 @@ CREATE TABLE participant_address (
     participant_id integer     NOT NULL REFERENCES participant(participant_id),
     country_code   char(2)     NOT NULL CHECK (country_code ~ '^[A-Z]{2}$'),
     city           varchar(80) NOT NULL,
-    street_line    varchar(120) NOT NULL,
+    street_line    varchar(150) NOT NULL,
     postal_code    varchar(15) NOT NULL,
     valid_from     date        NOT NULL DEFAULT CURRENT_DATE,
     valid_to       date,
