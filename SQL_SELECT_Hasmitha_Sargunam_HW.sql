@@ -1,46 +1,11 @@
 /*
-====================================================================================================
+
 SQL SELECT HW - dvdrental database (PostgreSQL)
 Author: Hasmitha Sargunam
 Every task is solved three ways: JOIN, SUBQUERY and CTE. No window functions are used.
 Schema name (public) is written before every table. No IDs are hardcoded (lookups go by name).
 Tested on PostgreSQL 16 against the provided dvdrental database. All queries run without errors.
-====================================================================================================
 
-----------------------------------------------------------------------------------------------------
-DATABASE ANALYSIS (what the tables are used for)
-----------------------------------------------------------------------------------------------------
-Transactional data (rows are created by business events):
-    rental, payment (partitioned by payment_date, Jan-Jun 2017), inventory (copies of films in stores)
-Reference data (descriptive, rarely changes):
-    film, actor, category, language, customer, staff, store, address, city, country
-Connection (bridge) tables for many-to-many links:
-    film_actor (film <-> actor), film_category (film <-> category)
-Revenue path: payment -> rental -> inventory -> store (a payment knows the staff member and rental,
-and the rented copy in inventory knows which store it belongs to).
-
-----------------------------------------------------------------------------------------------------
-GENERAL ASSUMPTIONS
-----------------------------------------------------------------------------------------------------
-A1. "Rate more than 1" means film.rental_rate > 1.
-A2. "Released between 2017 and 2019" is inclusive of both years and uses film.release_year.
-A3. A store's revenue is the sum of payment.amount for rentals of copies that belong to that store
-    (payment -> rental -> inventory.store_id). Dates are always taken from payment.payment_date.
-A4. "After March 2017 (since April)" means payment_date >= 2017-04-01 with no upper limit.
-    Filters on dates use range conditions (not EXTRACT) so partition pruning and indexes can work.
-A5. The store address is address and address2 joined into one column. A NULL or empty address2 is skipped
-    so there is no trailing space.
-A6. "Number of movies" counts a film once per actor because film_actor has one row per film and actor.
-A7. Ties: for the "top N" tasks (1.3 and 2.2) the 5th place is shared by several rows in this data.
-    The result is cut to exactly N rows with a fixed tie-break (name or title in alphabetical order).
-    To keep everyone who ties, replace LIMIT 5 with FETCH FIRST 5 ROWS WITH TIES and drop the extra sort keys.
-A8. For Part 3 the answer is every actor tied for the longest inactivity (FETCH FIRST 1 ROW WITH TIES).
-    This needs PostgreSQL 13 or newer.
-A9. Rating to expected audience age uses the Motion Picture Association (MPA) system:
-        G = all ages, PG = 8+ (parental guidance), PG-13 = 13+, R = 17+ (younger with an adult), NC-17 = 18+.
-A10. Current year for Part 3 V1 comes from CURRENT_DATE, so the V1 numbers grow every year.
-A11. Actors without any film cannot have an inactivity period and are excluded in Part 3
-    (in this database every actor has at least one film).
 
 JOIN TYPE NOTES used throughout:
     INNER JOIN keeps only rows that have a match on both sides, so unmatched rows disappear.
