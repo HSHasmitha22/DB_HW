@@ -15,7 +15,7 @@ CREATE TABLE role (
 );
 CREATE TABLE participant_role (
     participant_id integer  NOT NULL REFERENCES participant(participant_id),
-    role_id        int NOT NULL REFERENCES role(role_id),
+    role_id        smallint NOT NULL REFERENCES role(role_id),
     valid_from     date     NOT NULL DEFAULT CURRENT_DATE,
     valid_to       date,
     PRIMARY KEY (participant_id, role_id, valid_from),
