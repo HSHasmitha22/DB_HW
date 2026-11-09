@@ -41,7 +41,7 @@ CREATE UNIQUE INDEX ux_participant_address_current
 CREATE TABLE category (
     category_id        integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     parent_category_id integer REFERENCES category(category_id),
-    category_name      varchar(80) NOT NULL,
+    category_name      varchar(100) NOT NULL,
     CONSTRAINT ck_category_not_own_parent CHECK (parent_category_id IS NULL OR parent_category_id <> category_id),
     CONSTRAINT uq_category_name_per_parent UNIQUE NULLS NOT DISTINCT (parent_category_id, category_name)
 );
