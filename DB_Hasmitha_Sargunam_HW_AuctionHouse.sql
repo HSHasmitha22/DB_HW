@@ -81,7 +81,6 @@ CREATE TABLE auction (
     ends_at       timestamptz  NOT NULL,
     CONSTRAINT ck_auction_time CHECK (ends_at > starts_at)
 );
-
 CREATE TABLE lot (
     lot_id        integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     auction_id    integer       NOT NULL REFERENCES auction(auction_id),
