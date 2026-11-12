@@ -1,17 +1,6 @@
 /* =====================================================================
    SQL_DML_HW  |  Task 2  |  DELETE vs TRUNCATE vs VACUUM FULL
-   Run the statements one at a time (or the whole script) and note the execution
-   time shown by your client (DBeaver: "Statistics"; psql: \timing on).
-   Server output of VACUUM FULL VERBOSE: DBeaver Ctrl+Shift+O.
-
-   MEASURED RESULTS below come from PostgreSQL 16.15, default configuration,
-   one run each on a sandbox VM. Absolute times depend on hardware; the ratios
-   and the size changes are the point.
-   ===================================================================== */
-
--- Helper used before and after every step: space consumed by the table
--- (the query from the assignment, unchanged).
--- (Re-run this exact statement after each step.)
+  
 SELECT *, pg_size_pretty(total_bytes) AS total, pg_size_pretty(index_bytes) AS INDEX,
        pg_size_pretty(toast_bytes) AS toast, pg_size_pretty(table_bytes) AS TABLE
 FROM (SELECT *, total_bytes-index_bytes-COALESCE(toast_bytes,0) AS table_bytes
