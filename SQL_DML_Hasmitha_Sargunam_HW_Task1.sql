@@ -3,39 +3,10 @@
 
    Author: Hasmitha Sargunam
    Personal data used: first name 'Hasmitha', last name 'Sargunam',
-   e-mail 'hasmitha.sargunam@example.com'.
-   (the same values are used in subtasks 5, 6 and 7 to find "my" customer row;
-    they are the natural key that makes the script rerunnable)
-
-   GENERAL NOTES (apply to every subtask below)
-   * Every subtask is its own transaction (BEGIN ... COMMIT). Why separate:
-       - each subtask is one logical unit of work; if it fails, only that unit
-         is undone and earlier committed subtasks stay intact,
-       - a failure is easy to locate and the script can simply be re-run,
-       - locks are held only briefly.
-   * If a transaction fails (constraint violation, typo, lost connection) PostgreSQL
-     aborts it; every statement inside it is rolled back and nothing from that
-     subtask is stored. Data committed by previous subtasks is NOT affected.
-     In psql run with  \set ON_ERROR_STOP on  and send ROLLBACK after an error.
-     Before COMMIT you may also run ROLLBACK manually: only the rows touched by the
-     current subtask are affected.
-   * Referential integrity: no IDs are hardcoded. Every foreign key value
-     (language_id, film_id, actor_id, store_id, staff_id, inventory_id, customer_id,
-     rental_id) is looked up by joining to the parent table at run time, so a child row
-     can only be created if its parent row exists. The database foreign keys
-     (ON DELETE RESTRICT) back this up: a wrong delete/insert fails instead of
-     leaving orphans.
-   * INSERT ... SELECT instead of INSERT ... VALUES: the SELECT lets us (a) resolve
-     foreign keys by lookup instead of typing IDs that differ between databases,
-     (b) reuse the same statement to filter out rows that already exist (WHERE NOT
-     EXISTS), and (c) insert several related rows in one statement. A VALUES list
-     with literal IDs would break on any database where the IDs differ.
-   * Every INSERT/UPDATE/DELETE has RETURNING so the changed rows are visible.
-   * last_update is set to current_date on all new/updated rows. The payment table
-     has no last_update column, so the rule cannot apply there. Note: the schema's
-     BEFORE UPDATE trigger last_updated() sets last_update = CURRENT_TIMESTAMP on
-     updates; that is still today's date.
-   ===================================================================== */
+   e-mail 'hasmithahs220806@gmail.com'.
+   
+  
+   
 
 
 /* ---------------------------------------------------------------------
@@ -346,9 +317,7 @@ RETURNING payment_id, customer_id, staff_id, rental_id, amount, payment_date;
 COMMIT;
 
 
-/* ---------------------------------------------------------------------
-   Final check (read-only): what the script produced
-   --------------------------------------------------------------------- */
+
 SELECT f.title, f.release_year, f.rental_duration, f.rental_rate, f.last_update
 FROM public.film f
 WHERE UPPER(f.title) IN ('THE SHAWSHANK REDEMPTION', 'INCEPTION', 'THE GRAND BUDAPEST HOTEL')
